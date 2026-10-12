@@ -1,0 +1,15 @@
+http://127.0.0.1:8000/admin/
+admin
+djangoadmin
+
+useri:
+user1
+djangouser
+
+ana_popescu - Password: test123 (pasionată de electronice)
+ion_ionescu - Password: test123 (entuziast fashion)
+maria_gheorghe - Password: test123 (decorator de interior)
+alex_dumitru - Password: test123 (cititor pasionat)
+elena_stan - Password: test123 (sportivă)
+cristian_popa - Password: test123 (cumpărător divers)
+diana_radu - Password: test123 (cumpărător divers)

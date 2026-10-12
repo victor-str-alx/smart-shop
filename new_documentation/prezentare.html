@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop - Prezentare Proiect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            height: 90vh;
+            margin: 5vh auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px 80px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        ul {
+            font-size: 1.3em;
+            line-height: 2.2;
+            margin-left: 40px;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        .check {
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-badge {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: white;
+            color: #667eea;
+            border: 3px solid #667eea;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .diagram img {
+            max-width: 90%;
+            max-height: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            z-index: 1001;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .stat-box {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .big-number {
+            font-size: 5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+
+    <div class="presentation">
+        <!-- Slide 1: Titlu -->
+        <div class="slide active">
+            <div class="center-content">
+                <h1>SmartShop</h1>
+                <p class="subtitle">Sistem E-Commerce cu Recomandări Machine Learning</p>
+                <div style="margin-top: 40px; font-size: 1.3em; color: #666;">
+                    <p><strong>Student:</strong> [Numele Tău]</p>
+                    <p style="margin-top: 10px;">Facultatea de Științe Economice și Gestiunea Afacerilor</p>
+                    <p style="margin-top: 10px;"><strong>Comerț Electronic - 2025</strong></p>
+                </div>
+            </div>
+            <div class="slide-number">1 / 20</div>
+        </div>
+
+        <!-- Slide 2: Cuprins -->
+        <div class="slide">
+            <h2>📋 Cuprins</h2>
+            <div class="content">
+                <ul style="font-size: 1.4em; line-height: 2.5;">
+                    <li>Introducere & Obiective</li>
+                    <li>Tehnologii Utilizate</li>
+                    <li>Arhitectura Sistemului</li>
+                    <li>Baza de Date (ER Diagram)</li>
+                    <li>Algoritmi Machine Learning</li>
+                    <li>Funcționalități Principale</li>
+                    <li>Demo & Screenshots</li>
+                    <li>Rezultate & Concluzii</li>
+                </ul>
+            </div>
+            <div class="slide-number">2 / 20</div>
+        </div>
+
+        <!-- Slide 3: Introducere -->
+        <div class="slide">
+            <h2>🎯 Ce este SmartShop?</h2>
+            <div class="content">
+                <div class="highlight">
+                    <ul style="font-size: 1.3em;">
+                        <li>Platformă e-commerce completă</li>
+                        <li>Sistem avansat de recomandări ML</li>
+                        <li>UI/UX modern și responsive</li>
+                        <li>Management complet comenzi</li>
+                    </ul>
+                </div>
+                <h3 style="margin-top: 40px; text-align: center; color: #667eea;">Problema Rezolvată:</h3>
+                <p style="font-size: 1.4em; text-align: center; font-style: italic; margin-top: 20px; color: #666;">
+                    "Cum ajutăm utilizatorii să descopere produse relevante<br>
+                    pentru ei într-un catalog mare?"
+                </p>
+            </div>
+            <div class="slide-number">3 / 20</div>
+        </div>
+
+        <!-- Slide 4: Obiective -->
+        <div class="slide">
+            <h2>✅ Obiective Realizate</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div>
+                        <h3>Core Features</h3>
+                        <ul>
+                            <li><span class="check">✓</span> Algoritmi ML (TF-IDF + Collaborative)</li>
+                            <li><span class="check">✓</span> Aplicație e-commerce funcțională</li>
+                            <li><span class="check">✓</span> Interfață modernă</li>
+                            <li><span class="check">✓</span> Sistem reviews & ratings</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Features BONUS</h3>
+                        <ul>
+                            <li><span class="check">✓</span> Export PDF comenzi</li>
+                            <li><span class="check">✓</span> Dashboard statistici</li>
+                            <li><span class="check">✓</span> Căutare fără diacritice</li>
+                            <li><span class="check">✓</span> Grafice interactive</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">4 / 20</div>
+        </div>
+
+        <!-- Slide 5: Tehnologii -->
+        <div class="slide">
+            <h2>🛠️ Stack Tehnologic</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div>
+                        <h3>Backend</h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Django 5.2.8</span>
+                            <span class="tech-badge">PostgreSQL</span>
+                            <span class="tech-badge">Python 3.14</span>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Machine Learning</h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">scikit-learn</span>
+                            <span class="tech-badge">NumPy</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Frontend</h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Bootstrap 5.3.3</span>
+                            <span class="tech-badge">Chart.js 4.4.0</span>
+                            <span class="tech-badge">Custom CSS</span>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Librării</h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">ReportLab</span>
+                            <span class="tech-badge">Pillow</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">5 / 20</div>
+        </div>
+
+        <!-- Slide 6: Arhitectura -->
+        <div class="slide">
+            <h2>🏗️ Arhitectura Sistemului</h2>
+            <div class="content">
+                <div class="diagram">
+                    <img src="diagram2.png" alt="Arhitectura Sistem">
+                </div>
+                <p style="text-align: center; font-size: 1.2em; margin-top: 20px; color: #666;">
+                    Browser ↔ Django (MVC) ↔ PostgreSQL ↔ ML Recommender
+                </p>
+            </div>
+            <div class="slide-number">6 / 20</div>
+        </div>
+
+        <!-- Slide 7: ER Diagram -->
+        <div class="slide">
+            <h2>🗄️ Baza de Date - ER Diagram</h2>
+            <div class="content">
+                <div class="diagram">
+                    <img src="diagram1.png" alt="ER Diagram">
+                </div>
+                <p style="text-align: center; font-size: 1.2em; margin-top: 20px; color: #666;">
+                    <strong>7 Entități:</strong> User, Product, Category, Order, OrderItem, Review, Rating
+                </p>
+            </div>
+            <div class="slide-number">7 / 20</div>
+        </div>
+
+        <!-- Slide 8: Use Case Diagram -->
+        <div class="slide">
+            <h2>👤 Use Case Diagram</h2>
+            <div class="content">
+                <div class="diagram">
+                    <img src="diagram4.png" alt="Use Case Diagram">
+                </div>
+            </div>
+            <div class="slide-number">8 / 20</div>
+        </div>
+
+        <!-- Slide 9: ML Overview -->
+        <div class="slide">
+            <h2>🤖 Algoritmi Machine Learning</h2>
+            <div class="content">
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>Content-Based</h3>
+                        <p>TF-IDF pentru analiza text</p>
+                        <p style="margin-top: 15px;">"Produse similare cu cele cumpărate"</p>
+                    </div>
+                    <div class="card">
+                        <h3>Collaborative</h3>
+                        <p>User-based filtering</p>
+                        <p style="margin-top: 15px;">"Ce au cumpărat utilizatori similari"</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hybrid</h3>
+                        <p>Combină ambele</p>
+                        <p style="margin-top: 15px;">"Acuratețe maximă"</p>
+                    </div>
+                </div>
+                <div class="diagram" style="margin-top: 40px;">
+                    <img src="diagram3.png" alt="ML Flow" style="max-height: 350px;">
+                </div>
+            </div>
+            <div class="slide-number">9 / 20</div>
+        </div>
+
+        <!-- Slide 10: TF-IDF Explained -->
+        <div class="slide">
+            <h2>📊 TF-IDF Content-Based Filtering</h2>
+            <div class="content">
+                <div class="two-column">
+                    <div>
+                        <h3>Cum Funcționează?</h3>
+                        <ul style="font-size: 1.2em;">
+                            <li><strong>Step 1:</strong> Extrage descrieri produse</li>
+                            <li><strong>Step 2:</strong> Vectorizare text → numere</li>
+                            <li><strong>Step 3:</strong> Calcul cosine similarity</li>
+                            <li><strong>Step 4:</strong> Recomandă Top N</li>
+                        </ul>
+                    </div>
+                    <div class="highlight">
+                        <h3>Exemplu</h3>
+                        <p style="font-size: 1.2em; line-height: 1.8;">
+                            <strong>User a cumpărat:</strong><br>
+                            "Laptop Gaming ASUS"
+                            <br><br>
+                            <strong style="color: #28a745;">→ Recomandă:</strong><br>
+                            • Monitor Gaming LG<br>
+                            • Mouse Gaming<br>
+                            • Tastatură Mecanică
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">10 / 20</div>
+        </div>
+
+        <!-- Slide 11: Collaborative Filtering -->
+        <div class="slide">
+            <h2>👥 Collaborative Filtering</h2>
+            <div class="content">
+                <h3>User-Item Matrix</h3>
+                <div class="code-block">
+         Prod1  Prod2  Prod3  Prod4
+User A    1      0      1      0
+User B    1      1      0      1   ← Similar cu A
+User C    0      1      1      0
+                </div>
+                <div class="highlight" style="margin-top: 30px;">
+                    <h3>Exemplu Real</h3>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        <strong>Ana și Maria</strong> au cumpărat produse similare<br>
+                        <strong style="color: #28a745;">→</strong> Ana primește recomandări din comenzile Mariei<br>
+                        <strong style="color: #28a745;">→</strong> Maria primește recomandări din comenzile Anei
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">11 / 20</div>
+        </div>
+
+        <!-- Slide 12: Funcționalități 1 -->
+        <div class="slide">
+            <h2>⚡ Funcționalități - Partea 1</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h3>📦 Catalog Produse</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>44 produse în 8 categorii</li>
+                            <li>Filtrare & sortare</li>
+                            <li>Paginare (12/pagină)</li>
+                            <li>Căutare fără diacritice</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <h3>🛒 Coș Cumpărături</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>Management în timp real</li>
+                            <li>Calcul total automat</li>
+                            <li>Shipping calculation</li>
+                            <li>Trust badges</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid-2" style="margin-top: 30px;">
+                    <div class="card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <h3>📋 Istoric Comenzi</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>Toate achizițiile</li>
+                            <li>Detalii complete</li>
+                            <li>Status comenzi</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                        <h3>⭐ Reviews & Ratings</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>Sistem 1-5 stele</li>
+                            <li>30-50 reviews</li>
+                            <li>Validare ownership</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">12 / 20</div>
+        </div>
+
+        <!-- Slide 13: Funcționalități 2 (BONUS) -->
+        <div class="slide">
+            <h2>🎁 Features BONUS - Partea 2</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>📄 Export PDF</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>Facturi profesionale</li>
+                            <li>Export individual</li>
+                            <li>Export bulk (toate)</li>
+                            <li>Design matching brand</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Dashboard</h3>
+                        <ul style="text-align: left; margin-top: 20px;">
+                            <li>Statistici personale</li>
+                            <li>Grafice interactive</li>
+                            <li>Trend vânzări (7 zile)</li>
+                            <li>Chart.js integration</li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 1.5em; margin-top: 50px; color: #667eea; font-weight: bold;">
+                    🎉 7 Features peste cerințele inițiale!
+                </p>
+            </div>
+            <div class="slide-number">13 / 20</div>
+        </div>
+
+        <!-- Slide 14: UI/UX Modern -->
+        <div class="slide">
+            <h2>🎨 UI/UX Modern</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div>
+                        <h3>Design Principles</h3>
+                        <ul style="font-size: 1.2em;">
+                            <li>Mobile-First Responsive</li>
+                            <li>Gradient Styling</li>
+                            <li>Hover Effects & Animations</li>
+                            <li>Bootstrap Icons</li>
+                            <li>Empty States Friendly</li>
+                            <li>Card-based Layout</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Optimizări</h3>
+                        <div class="highlight">
+                            <ul style="font-size: 1.2em;">
+                                <li>✓ Produse compacte</li>
+                                <li>✓ Loading performance</li>
+                                <li>✓ Intuitive navigation</li>
+                                <li>✓ Accessible</li>
+                            </ul>
+                        </div>
+                        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white; text-align: center;">
+                            <strong style="font-size: 1.3em;">Palette</strong><br>
+                            #667eea → #764ba2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">14 / 20</div>
+        </div>
+
+        <!-- Slide 15: Date de Test -->
+        <div class="slide">
+            <h2>🗂️ Dataset Generat</h2>
+            <div class="content">
+                <div class="grid-2" style="grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                    <div class="stat-box">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Utilizatori</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">44</div>
+                        <div class="stat-label">Produse</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">25+</div>
+                        <div class="stat-label">Comenzi</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 40px;">Utilizatori Test</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Profil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ana_popescu</strong></td>
+                            <td>test123</td>
+                            <td>Pasionată electronice</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ion_ionescu</strong></td>
+                            <td>test123</td>
+                            <td>Entuziast fashion</td>
+                        </tr>
+                        <tr>
+                            <td><strong>maria_gheorghe</strong></td>
+                            <td>test123</td>
+                            <td>Decorator interior</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="slide-number">15 / 20</div>
+        </div>
+
+        <!-- Slide 16: Demo Screenshots -->
+        <div class="slide">
+            <h2>📸 Demo - Screenshots Cheie</h2>
+            <div class="content">
+                <div style="background: #f8f9fa; padding: 40px; border-radius: 15px; text-align: center;">
+                    <h3 style="color: #667eea; margin-bottom: 30px;">Screenshots Principale</h3>
+                    <div class="grid-3">
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">Homepage</h4>
+                            <p style="margin-top: 10px;">Recomandări ML</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">Dashboard</h4>
+                            <p style="margin-top: 10px;">Grafice & Stats</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">Product Detail</h4>
+                            <p style="margin-top: 10px;">Reviews & Info</p>
+                        </div>
+                    </div>
+                    <div class="grid-3" style="margin-top: 30px;">
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">PDF Export</h4>
+                            <p style="margin-top: 10px;">Facturi</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">Coș</h4>
+                            <p style="margin-top: 10px;">Order Summary</p>
+                        </div>
+                        <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">
+                            <h4 style="color: #764ba2;">Istoric</h4>
+                            <p style="margin-top: 10px;">Toate comenzile</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 30px; font-size: 1.2em; color: #666; font-style: italic;">
+                        💡 Demo live disponibil la: http://127.0.0.1:8000/
+                    </p>
+                </div>
+            </div>
+            <div class="slide-number">16 / 20</div>
+        </div>
+
+        <!-- Slide 17: Rezultate & Metrici -->
+        <div class="slide">
+            <h2>📈 Rezultate & Performance</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div>
+                        <h3>Metrici Tehnice</h3>
+                        <div class="highlight">
+                            <ul style="font-size: 1.2em;">
+                                <li><span class="check">✓</span> ~2,000+ linii Python</li>
+                                <li><span class="check">✓</span> 8 template-uri HTML</li>
+                                <li><span class="check">✓</span> 500+ linii CSS custom</li>
+                                <li><span class="check">✓</span> 11 URL endpoints</li>
+                                <li><span class="check">✓</span> 7 modele DB</li>
+                                <li><span class="check">✓</span> 3 algoritmi ML</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Recommendation Accuracy</h3>
+                        <div class="stat-box" style="margin-top: 20px;">
+                            <div class="stat-number">Ridicată</div>
+                            <div class="stat-label">Content-based găsește produse similare</div>
+                        </div>
+                        <div class="stat-box" style="margin-top: 20px;">
+                            <div class="stat-number">Excelentă</div>
+                            <div class="stat-label">Collaborative descoperă pattern-uri</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">17 / 20</div>
+        </div>
+
+        <!-- Slide 18: Provocări & Soluții -->
+        <div class="slide">
+            <h2>⚡ Provocări & Soluții</h2>
+            <div class="content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Provocare</th>
+                            <th>Soluție Implementată</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Cold Start Problem</strong></td>
+                            <td>Hybrid approach (content + collaborative)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sparse User-Item Matrix</strong></td>
+                            <td>Cosine similarity pe vectori denși</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance cu multe produse</strong></td>
+                            <td>Prefetch queries, paginare optimizată</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Căutare cu diacritice</strong></td>
+                            <td>Unicode normalization (geaca → geacă)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PDF în română</strong></td>
+                            <td>ReportLab cu encoding UTF-8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="slide-number">18 / 20</div>
+        </div>
+
+        <!-- Slide 19: Concluzii -->
+        <div class="slide">
+            <h2>🎓 Concluzii</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div>
+                        <h3>Ce Am Învățat</h3>
+                        <ul style="font-size: 1.2em;">
+                            <li>Implementare algoritmi ML în producție</li>
+                            <li>Django framework & PostgreSQL</li>
+                            <li>Design pattern-uri (MVC)</li>
+                            <li>UI/UX moderne cu Bootstrap</li>
+                            <li>Optimizare performanță</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Impact</h3>
+                        <div class="highlight">
+                            <ul style="font-size: 1.2em;">
+                                <li><strong>Utilizatorii</strong> descoperă produse relevante</li>
+                                <li><strong>Experiență</strong> personalizată</li>
+                                <li><strong>Sistem</strong> scalabil și extensibil</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="center-content" style="margin-top: 50px;">
+                    <div class="big-number">11</div>
+                    <p style="font-size: 1.5em; color: #666;">Funcționalități Majore Implementate</p>
+                </div>
+            </div>
+            <div class="slide-number">19 / 20</div>
+        </div>
+
+        <!-- Slide 20: Q&A -->
+        <div class="slide">
+            <div class="center-content">
+                <h1 style="font-size: 4em;">Întrebări?</h1>
+                <div style="margin-top: 60px; font-size: 1.4em; color: #666; text-align: center;">
+                    <p><strong>Demo Live:</strong> http://127.0.0.1:8000/</p>
+                    <p style="margin-top: 20px;"><strong>GitHub:</strong> [Link Repository]</p>
+                    <p style="margin-top: 40px; font-size: 1.2em;">Contact: [Email]</p>
+                </div>
+                <div style="margin-top: 80px; font-size: 2em;">
+                    🙏 Mulțumesc pentru atenție!
+                </div>
+            </div>
+            <div class="slide-number">20 / 20</div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">Următor →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            // Update progress bar
+            progressBar.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Home') showSlide(0);
+            if (e.key === 'End') showSlide(totalSlides - 1);
+        });
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}SmartShop - Magazin Online cu Recomandări Inteligente{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    >
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'shop:product_list' %}">
+            <i class="bi bi-shop me-2"></i>
+            <span>SmartShop</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarContent" aria-controls="navbarContent"
+                aria-expanded="false" aria-label="Comută navigarea">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Search Form -->
+            <form method="get" action="{% url 'shop:product_list' %}" class="search-form mx-auto">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="search"
+                           placeholder="Caută produse, categorii..."
+                           value="{{ request.GET.search }}" aria-label="Search">
+                    <button class="btn btn-light" type="submit">
+                        <i class="bi bi-search"></i> Caută
+                    </button>
+                </div>
+            </form>
+
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'shop:dashboard' %}">
+                                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'shop:my_order' %}">
+                                    <i class="bi bi-cart3 me-2"></i>Comanda mea
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'shop:order_history' %}">
+                                    <i class="bi bi-clock-history me-2"></i>Istoric comenzi
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'shop:about_recommender' %}">
+                                    <i class="bi bi-info-circle me-2"></i>Despre sistem
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm me-2" href="{% url 'accounts:login' %}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light btn-sm" href="{% url 'accounts:register' %}">
+                            <i class="bi bi-person-plus me-1"></i>Register
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5 pt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-auto">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5><i class="bi bi-shop me-2"></i>SmartShop</h5>
+                <p class="text-white-50">
+                    Magazinul tău online cu recomandări inteligente bazate pe
+                    machine learning. Descoperă produse perfecte pentru tine!
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-white fs-4"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-white fs-4"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Informații</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'shop:product_list' %}">Produse</a></li>
+                    <li><a href="#">Despre noi</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Ajutor</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Întrebări frecvente</a></li>
+                    <li><a href="#">Livrare</a></li>
+                    <li><a href="#">Retururi</a></li>
+                    <li><a href="#">Termeni și condiții</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5>Newsletter</h5>
+                <p class="text-white-50">Abonează-te pentru oferte exclusive!</p>
+                <form class="d-flex gap-2">
+                    <input type="email" class="form-control" placeholder="Email-ul tău">
+                    <button type="submit" class="btn btn-light">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.2);">
+        <div class="row">
+            <div class="col-12 text-center text-white-50">
+                <p class="mb-0">
+                    &copy; 2024 SmartShop. Toate drepturile rezervate.
+                    <span class="ms-3"><i class="bi bi-robot me-1"></i>Powered by AI & Machine Learning</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS (pentru navbar, etc.) -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Coșul Meu - SmartShop{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="section-header">
+        <i class="bi bi-cart3 me-2"></i>Coșul Meu de Cumpărături
+    </h2>
+</div>
+
+{% if order %}
+    <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8 mb-4">
+            <div class="card order-summary">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-bag-check me-2"></i>Produse în Coș ({{ order.items.count }})
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% for item in order.items.all %}
+                        <div class="order-item d-flex align-items-center p-3">
+                            <div class="me-3">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+                                         class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-gradient rounded d-flex align-items-center justify-content-center"
+                                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                                        <i class="bi bi-box-seam text-white" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">
+                                    <a href="{% url 'shop:product_detail' item.product.slug %}" class="text-decoration-none">
+                                        {{ item.product.name }}
+                                    </a>
+                                </h6>
+                                <p class="text-muted small mb-1">
+                                    <i class="bi bi-tag me-1"></i>{{ item.product.category.name }}
+                                </p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted small">
+                                        <i class="bi bi-cash me-1"></i>{{ item.price }} RON/buc
+                                    </span>
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-x me-1"></i>{{ item.quantity }} buc
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-0 fw-bold fs-5 text-primary">{{ item.subtotal }} RON</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card order-summary sticky-top" style="top: 20px;">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calculator me-2"></i>Sumar Comandă
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Număr produse:</span>
+                            <span class="fw-semibold">{{ order.items.count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Cantitate totală:</span>
+                            <span class="fw-semibold">
+                                {% widthratio order.items.all|length 1 1 %}
+                                {% for item in order.items.all %}
+                                    {% if forloop.first %}{{ item.quantity }}{% else %} + {{ item.quantity }}{% endif %}
+                                {% endfor %}
+                                buc
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal:</span>
+                            <span class="fw-semibold">{{ order.total_amount }} RON</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Livrare:</span>
+                            <span class="text-success fw-semibold">
+                                {% if order.total_amount >= 200 %}
+                                    Gratuită!
+                                {% else %}
+                                    15 RON
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="order-total mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Total:</span>
+                            <span class="fs-4">
+                                {% if order.total_amount >= 200 %}
+                                    {{ order.total_amount }} RON
+                                {% else %}
+                                    {{ order.total_amount|add:15 }} RON
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'shop:checkout' %}">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Finalizează Comanda
+                            </button>
+                            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Continuă Cumpărăturile
+                            </a>
+                        </div>
+                    </form>
+
+                    {% if order.total_amount < 200 %}
+                        <div class="alert alert-info mt-3 mb-0">
+                            <small>
+                                <i class="bi bi-info-circle me-1"></i>
+                                Mai adaugă <strong>{{ 200|add:order.total_amount|add:"-"|add:order.total_amount }} RON</strong> pentru livrare gratuită!
+                            </small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">De ce SmartShop?</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-shield-check text-success me-2"></i>
+                            <small>Plată securizată</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-truck text-primary me-2"></i>
+                            <small>Livrare rapidă</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-arrow-repeat text-info me-2"></i>
+                            <small>Retur gratuit 30 zile</small>
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-headset text-warning me-2"></i>
+                            <small>Suport clienți 24/7</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <i class="bi bi-cart-x text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+        <h4 class="mt-4">Coșul tău este gol</h4>
+        <p class="text-muted mb-4">
+            Adaugă produse în coș pentru a continua cumpărăturile.
+        </p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-shop me-2"></i>Explorează Produsele
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

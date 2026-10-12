@@ -1,0 +1,354 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Catalog Produse - SmartShop{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Coloana stângă: categorii + top-uri -->
+    <div class="col-lg-3 col-md-4 mb-4">
+        <!-- Categories Filter -->
+        <div class="filter-section">
+            <h5 class="section-header">
+                <i class="bi bi-funnel me-2"></i>Categorii
+            </h5>
+            <ul class="list-group category-list mb-4">
+            <li class="list-group-item {% if not selected_category %}active{% endif %}">
+                <a class="text-decoration-none {% if not selected_category %}text-white{% endif %} d-flex align-items-center"
+                   href="{% url 'shop:product_list' %}{% if search_query %}?search={{ search_query }}{% endif %}{% if sort_by %}{% if search_query %}&{% else %}?{% endif %}sort={{ sort_by }}{% endif %}">
+                    <i class="bi bi-grid me-2"></i>Toate produsele
+                </a>
+            </li>
+            {% for cat in categories %}
+                <li class="list-group-item {% if selected_category == cat.slug %}active{% endif %}">
+                    <a class="text-decoration-none {% if selected_category == cat.slug %}text-white{% endif %} d-flex align-items-center"
+                       href="?category={{ cat.slug }}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">
+                        <i class="bi bi-tag me-2"></i>{{ cat.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        </div>
+
+        <!-- Top Products Widget -->
+        <div class="top-products-widget">
+            <h5><i class="bi bi-trophy-fill me-2"></i>Top Vânzări</h5>
+            <ul class="list-group">
+                {% for p in top_sold %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'shop:product_detail' p.slug %}" class="text-white text-decoration-none text-truncate">
+                            {{ p.name }}
+                        </a>
+                        <span class="badge">
+                            {{ p.total_sold|default:0 }}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Nu există date încă.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="top-products-widget" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h5><i class="bi bi-star-fill me-2"></i>Top Rating</h5>
+            <ul class="list-group">
+                {% for p in top_rated %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'shop:product_detail' p.slug %}" class="text-white text-decoration-none text-truncate">
+                            {{ p.name }}
+                        </a>
+                        <span class="badge">
+                            {{ p.avg_rating|floatformat:1 }}★
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Nu există rating-uri încă.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if current_category and associated_categories %}
+            <h5 class="mt-4">
+                Categorii asociate cu "{{ current_category.name }}"
+            </h5>
+            <ul class="list-group mb-4">
+                {% for cat in associated_categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ cat.name }}
+                        <span class="badge bg-secondary rounded-pill">
+                            {{ cat.num_together }}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">
+                        Nu au fost găsite alte categorii asociate.
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <!-- Coloana dreaptă: recomandări + listă produse -->
+    <div class="col-lg-9 col-md-8">
+
+        {% if search_query %}
+            <div class="alert alert-info mb-4">
+                <strong>Rezultate căutare pentru:</strong> "{{ search_query }}"
+                <a href="{% url 'shop:product_list' %}{% if selected_category %}?category={{ selected_category }}{% endif %}{% if sort_by %}{% if selected_category %}&{% else %}?{% endif %}sort={{ sort_by }}{% endif %}" class="btn btn-sm btn-outline-secondary ms-2">Șterge căutarea</a>
+            </div>
+        {% endif %}
+
+        {% if user.is_authenticated and not search_query %}
+            <!-- Recomandări Content-Based -->
+            <div class="mb-4">
+                <h3 class="section-header">
+                    <i class="bi bi-lightbulb me-2"></i>Recomandări pentru tine
+                </h3>
+                <p class="text-muted mb-3">
+                    <i class="bi bi-cpu me-1"></i>Bazate pe istoricul tău de cumpărături și preferințe
+                </p>
+
+                {% if personal_recommendations %}
+                    <div class="row">
+                        {% for p in personal_recommendations %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="card product-card recommendation-card border-info h-100 position-relative">
+                                    <span class="recommendation-badge badge bg-info">
+                                        <i class="bi bi-star-fill me-1"></i>Recomandat
+                                    </span>
+                                    {% if p.image %}
+                                        <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}">
+                                    {% else %}
+                                        <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" style="height: 220px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ p.name }}</h5>
+                                        <p class="card-text text-muted small">
+                                            {{ p.description|truncatechars:80 }}
+                                        </p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                        <span class="price">{{ p.price }} RON</span>
+                                        <a href="{% url 'shop:product_detail' p.slug %}"
+                                           class="btn btn-sm btn-info text-white">
+                                            <i class="bi bi-eye me-1"></i>Vezi
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">
+                        Nu avem încă suficiente date despre comenzile tale pentru a genera
+                        recomandări pe baza categoriilor preferate.
+                    </p>
+                {% endif %}
+                <hr>
+            </div>
+
+            <!-- Recomandări Collaborative Filtering -->
+            {% if cf_recommendations %}
+                <div class="mb-4">
+                    <h3 class="section-header">
+                        <i class="bi bi-people me-2"></i>Utilizatori ca tine au cumpărat
+                    </h3>
+                    <p class="text-muted mb-3">
+                        <i class="bi bi-graph-up me-1"></i>Bazate pe preferințele utilizatorilor similari
+                    </p>
+                    <div class="row">
+                        {% for p in cf_recommendations %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="card product-card recommendation-card border-success h-100 position-relative">
+                                    <span class="recommendation-badge badge bg-success">
+                                        <i class="bi bi-heart-fill me-1"></i>Popular
+                                    </span>
+                                    {% if p.image %}
+                                        <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}">
+                                    {% else %}
+                                        <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" style="height: 220px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                            <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ p.name }}</h5>
+                                        <p class="card-text text-muted small">
+                                            {{ p.description|truncatechars:80 }}
+                                        </p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                        <span class="price">{{ p.price }} RON</span>
+                                        <a href="{% url 'shop:product_detail' p.slug %}"
+                                           class="btn btn-sm btn-success text-white">
+                                            <i class="bi bi-eye me-1"></i>Vezi
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div>
+                <h3 class="section-header mb-2">
+                    {% if search_query %}
+                        <i class="bi bi-search me-2"></i>Rezultate căutare
+                    {% elif selected_category %}
+                        <i class="bi bi-tag me-2"></i>{{ current_category.name }}
+                    {% else %}
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Toate produsele
+                    {% endif %}
+                </h3>
+            </div>
+
+            <!-- Sorting Dropdown -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="sortSelect" class="mb-0 fw-semibold">
+                    <i class="bi bi-sort-down me-1"></i>Sortare:
+                </label>
+                <select id="sortSelect" class="sort-dropdown" onchange="this.form.submit()">
+                    <option value="">-- Selectează --</option>
+                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Preț: Crescător</option>
+                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Preț: Descrescător</option>
+                    <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Rating: Cel mai mare</option>
+                    <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Cele mai noi</option>
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nume: A-Z</option>
+                </select>
+            </div>
+        </div>
+
+        <form id="sortForm" method="get" style="display: none;">
+            <input type="hidden" name="sort" id="sortInput" value="{{ sort_by }}">
+            {% if search_query %}
+                <input type="hidden" name="search" value="{{ search_query }}">
+            {% endif %}
+            {% if selected_category %}
+                <input type="hidden" name="category" value="{{ selected_category }}">
+            {% endif %}
+        </form>
+
+        <script>
+            document.getElementById('sortSelect').onchange = function() {
+                document.getElementById('sortInput').value = this.value;
+                document.getElementById('sortForm').submit();
+            };
+        </script>
+
+        <div class="row g-4">
+            {% for product in products %}
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="card product-card hover-lift h-100">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" style="height: 220px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                                <i class="bi bi-box-seam text-white" style="font-size: 3rem; opacity: 0.7;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-light text-dark mb-2 align-self-start">
+                                <i class="bi bi-tag-fill me-1"></i>{{ product.category.name }}
+                            </span>
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted small flex-grow-1">
+                                {{ product.description|truncatechars:80 }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <span class="price">{{ product.price }} RON</span>
+                                <a href="{% url 'shop:product_detail' product.slug %}"
+                                   class="btn btn-sm btn-primary">
+                                    <i class="bi bi-cart-plus me-1"></i>Detalii
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        {% if search_query %}
+                            <h5>Nu am găsit produse pentru "{{ search_query }}"</h5>
+                            <p>Încercați să căutați altceva sau <a href="{% url 'shop:product_list' %}">vedeți toate produsele</a>.</p>
+                        {% else %}
+                            <h5>Nu există produse în această categorie.</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination Controls -->
+        {% if page_obj.paginator.num_pages > 1 %}
+            <nav aria-label="Product pagination" class="mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="text-muted mb-0">
+                        Afișare {{ page_obj.start_index }}-{{ page_obj.end_index }} din {{ page_obj.paginator.count }} produse
+                    </p>
+                </div>
+
+                <ul class="pagination justify-content-center">
+                    <!-- First Page -->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;&laquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    {% endif %}
+
+                    <!-- Page Numbers -->
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- Next and Last Page -->
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
