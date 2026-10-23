@@ -1,216 +1,51 @@
-# 🛍️ Smart-Shop — E-Commerce Platform with Machine Learning Recommendations
+# Smart Shop — E-commerce Platform with Machine Learning Recommendations
 
-Smart-Shop is an e-commerce web application developed with Django and PostgreSQL that combines traditional online shopping functionality with a hybrid machine learning recommendation system. The platform helps users discover relevant products through personalized recommendations while providing essential tools for managing products, orders, reviews, and sales analytics.
+## Overview
 
-## 1. Project Overview
+Smart Shop is a Django e-commerce application backed by PostgreSQL. It combines standard online shopping workflows with a hybrid product recommendation system and a sales analytics dashboard.
 
-Smart-Shop aims to improve the online shopping experience by combining a user-friendly interface with data-driven product recommendations.
+The project is particularly relevant to a data-oriented portfolio because it brings together structured business data, product interactions, recommendations, and visual reporting.
 
-The application follows Django's Model-View-Template (MVT) architecture and uses a hybrid recommendation system that combines content-based filtering with collaborative filtering.
+## Main Features
 
-## 2. Main Features
+- Product catalogue with categories, search, and filtering
+- Shopping cart and order management
+- Product reviews and ratings
+- Personalised product recommendations
+- Sales analytics dashboard
+- PDF invoice generation
+- User accounts and authentication
 
-- **Product catalog:** Browse products organized into categories.
-- **Search and filtering:** Search for products, including accent-insensitive text matching.
-- **Shopping cart:** Add products and manage quantities before checkout.
-- **Order management:** Place orders and review order history.
-- **Product reviews and ratings:** Allow users to share feedback on products.
-- **Personalized recommendations:** Recommend products using machine learning techniques.
-- **Analytics dashboard:** Display relevant shopping and sales statistics.
-- **PDF invoices:** Generate invoices using ReportLab.
-- **User management:** Support user accounts and authentication.
+## Technology Stack
 
-## 3. Technology Stack
-
-| Component | Technology |
+| Area | Technologies |
 |---|---|
 | Backend | Python, Django 5.2.8 |
 | Database | PostgreSQL |
-| Machine learning | scikit-learn, NumPy |
-| Frontend | HTML, CSS, JavaScript |
-| UI framework | Bootstrap 5.3.3 |
-| Data visualization | Chart.js 4.4.0 |
+| Recommendation system | scikit-learn, NumPy |
+| Frontend | HTML, CSS, JavaScript, Bootstrap 5.3.3 |
+| Visualisation | Chart.js 4.4.0 |
 | PDF generation | ReportLab |
 | Image processing | Pillow |
-| Architecture | Django MVT |
 
-## 4. System Architecture
+## Recommendation Approach
 
-The application uses the Model-View-Template architecture provided by Django.
+The project describes a hybrid recommendation approach combining:
 
-- **Models:** Define the application's data structures and relationships.
-- **Views:** Handle HTTP requests, business logic, and communication with the database.
-- **Templates:** Render the user interface using HTML and Django's template engine.
-- **Database:** PostgreSQL stores user accounts, products, categories, orders, and customer feedback.
-- **Recommendation engine:** Processes product and user interaction data to generate personalized suggestions.
+- **Content-based filtering**, using product text representations with TF-IDF and cosine similarity.
+- **User-based collaborative filtering**, using patterns in user preferences and interactions.
+- **Weighted combination**, with the described design assigning 60% to content-based filtering and 40% to collaborative filtering.
 
-This separation helps keep the application's business logic, data access, and presentation organized.
+Recommendation quality depends on the data available and how the system is evaluated; the weights alone do not establish model performance.
 
-## 5. Hybrid Recommendation System
+## Data Analytics Perspective
 
-Smart-Shop uses a hybrid recommendation approach that combines two techniques.
+E-commerce data can help explore questions such as product performance, order trends, customer feedback, and recommendation behaviour. The repository also describes an analytics dashboard. Specific findings should only be reported after reviewing actual dashboard calculations and the data they use.
 
-### 5.1 Content-Based Filtering — 60%
+## Architecture
 
-The content-based component analyzes product information to identify similarities between products.
+The application follows Django's Model-View-Template (MVT) pattern. Django models define data structures, views handle requests and application logic, templates render the interface, and PostgreSQL stores application records.
 
-The implementation uses:
+## Project Value
 
-- TF-IDF for transforming textual product information into numerical representations.
-- Cosine similarity for measuring similarity between product vectors.
-
-This approach helps identify products with similar descriptions or characteristics.
-
-### 5.2 User-Based Collaborative Filtering — 40%
-
-The collaborative filtering component uses user-related information and interaction patterns to identify potentially relevant products.
-
-It aims to recommend products based on similarities in user preferences and behavior.
-
-### 5.3 Hybrid Score
-
-The two recommendation components are combined using the following weighted formula:
-
-\[
-S_{\text{hybrid}} = 0.6S_{\text{content}} + 0.4S_{\text{collaborative}}
-\]
-
-The resulting score combines product similarity with collaborative recommendation signals.
-
-The final recommendations depend on the available product data and user interaction history.
-
-## 6. Database Design
-
-The application uses PostgreSQL to store its main entities.
-
-| Entity | Purpose |
-|---|---|
-| `User` | Stores user account information. |
-| `Product` | Stores product details, descriptions, prices, and related information. |
-| `Category` | Organizes products into categories. |
-| `Order` | Represents a customer's order. |
-| `OrderItem` | Stores individual products and quantities associated with an order. |
-| `Review` | Stores written product reviews. |
-| `Rating` | Stores product rating information used by the application. |
-
-The relationships between these entities support the shopping workflow, customer feedback, order tracking, and recommendation system.
-
-## 7. Development and Test Data
-
-The development dataset described in the project documentation includes:
-
-- **7 users**
-- **44 products**
-- **8 categories**
-- **25+ orders**
-- **50 reviews**
-
-This data supports testing the application's main shopping features and provides sample information for experimenting with product recommendations.
-
-These figures describe the documented development dataset and may differ from the current database contents.
-
-## 8. Installation and Execution
-
-### 8.1 Prerequisites
-
-Before running the project, install:
-
-- Python compatible with the project's dependencies.
-- PostgreSQL.
-- Git.
-- pip, Python's package installer.
-
-### 8.2 Clone the repository
-
-Open a terminal and run:
-
-```bash
-git clone https://github.com/victor-str-alx/smart-shop.git
-cd smart-shop
-```
-
-### 8.3 Create a virtual environment
-
-On Windows:
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-If PowerShell blocks script execution, activate the environment using Command Prompt instead:
-
-```bat
-.venv\Scripts\activate.bat
-```
-
-### 8.4 Install dependencies
-
-If the repository contains a `requirements.txt` file, install the project's dependencies with:
-
-```bash
-pip install -r requirements.txt
-```
-
-If it does not, install the dependencies specified by the project documentation and source code.
-
-### 8.5 Configure the database
-
-Create a PostgreSQL database and configure the database connection using the project's environment variables or Django settings.
-
-Check `.env.example` for the expected configuration variables. Create a local `.env` file if required by the application, and supply your own database credentials.
-
-**Important:** Do not commit database passwords, secret keys, or other private credentials to GitHub.
-
-### 8.6 Apply database migrations
-
-Run:
-
-```bash
-python manage.py migrate
-```
-
-### 8.7 Start the development server
-
-Run:
-
-```bash
-python manage.py runserver
-```
-
-Open the local development address displayed in the terminal, typically:
-
-`http://127.0.0.1:8000/`
-
-**Setup note:** The exact dependency list, environment variable names, database initialization procedure, and any additional setup steps should follow the files included in the repository.
-
-## 9. Conclusions and Future Improvements
-
-Smart-Shop demonstrates how a traditional e-commerce application can be extended with machine learning to provide personalized product recommendations.
-
-The combination of Django, PostgreSQL, and a hybrid recommendation engine provides a foundation for further development.
-
-Potential future improvements include:
-
-- **Online payments:** Integrate a payment provider such as Stripe.
-- **Advanced recommendations:** Explore deep learning and image-based product similarity.
-- **Performance optimization:** Introduce Redis caching for frequently accessed data.
-- **Improved search:** Evaluate Elasticsearch for more advanced product discovery.
-- **Recommendation evaluation:** Measure recommendation quality using suitable metrics and validation methods.
-- **Scalability:** Improve deployment, monitoring, and database performance as the dataset grows.
-
----
-
-## Author
-
-**Victor Strîmbeanu**
-
-## Repository
-
-[GitHub — Smart-Shop](https://github.com/victor-str-alx/smart-shop)
-
-Clone the project:
-
-```bash
-git clone https://github.com/victor-str-alx/smart-shop.git
-```
+Smart Shop demonstrates a combination of application development, relational data, visual reporting, and recommendation concepts. It is a useful bridge between my existing software background and my developing interest in data analysis.
